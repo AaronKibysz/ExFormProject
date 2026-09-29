@@ -1,0 +1,16 @@
+# ACM Generator - Requirements
+# Python 3.12+
+
+# Core dependencies
+PySide6>=6.6.0
+PyMuPDF>=1.23.0
+xlwings>=0.30.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Optional: for development
+# black>=23.0.0
+# ruff>=0.1.0
+# mypy>=1.5.0
