@@ -2,6 +2,7 @@
 import sys
 import os
 import logging
+import inspect
 from pathlib import Path
 from typing import List, Optional
 
@@ -9,7 +10,7 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QLineEdit, QPushButton, QSpinBox, QTextEdit,
     QProgressBar, QFileDialog, QMessageBox, QGroupBox,
-    QFormLayout, QComboBox
+    QFormLayout, QComboBox, QTableWidgetItem
 )
 from PySide6.QtCore import Qt, QThread, Signal, Slot
 from PySide6.QtGui import QFont
@@ -39,8 +40,14 @@ class WorkerThread(QThread):
             def progress_callback(pct: int, msg: str):
                 self.progress.emit(pct, msg)
             
-            # Add progress callback to kwargs if the function supports it
-            self.kwargs['progress_callback'] = progress_callback
+            parameters = inspect.signature(self.func).parameters.values()
+            supports_progress = any(
+                parameter.name == 'progress_callback'
+                or parameter.kind == inspect.Parameter.VAR_KEYWORD
+                for parameter in parameters
+            )
+            if supports_progress:
+                self.kwargs.setdefault('progress_callback', progress_callback)
             result = self.func(*self.args, **self.kwargs)
             self.finished.emit(result)
         except Exception as e:

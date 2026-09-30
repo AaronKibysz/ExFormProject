@@ -15,6 +15,7 @@ from app.utils.logging import get_logger
 
 
 logger = get_logger()
+MISSING_FIELD_COLOR = (255, 242, 204)
 
 
 class ExcelTemplateWriter:
@@ -191,10 +192,13 @@ class ExcelTemplateWriter:
         
         for row, (field_name, _) in PASO1_MAPPINGS.items():
             value = mappings.get(field_name)
+            cell = sheet.range(f"{col}{row}")
             if value is not None:
-                cell = sheet.range(f"{col}{row}")
                 cell.value = value
                 logger.debug(f"  {col}{row} ({field_name}) = {value}")
+            elif field_name in {"price_usd", "address", "covered_area", "total_area"}:
+                cell.value = None
+                cell.color = MISSING_FIELD_COLOR
     
     def _clear_comparable_column(self, sheet: xw.Sheet, col: str) -> None:
         """Clear data from a comparable column (keep formulas)."""
