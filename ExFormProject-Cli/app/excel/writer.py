@@ -2,17 +2,16 @@
 import os
 import shutil
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
+
 import xlwings as xw
-
-from app.models import ComparableProperty, PropertyToAnalyze, PriceType
-from app.excel.template import (
-    PASO1_MAPPINGS, FORMULA_ROWS, BASE_COMPARABLE_COL, PROPERTY_COL,
-    get_column_for_comparable, get_comparable_count_from_template,
-    build_dynamic_formula
-)
+from app.excel.template import (BASE_COMPARABLE_COL, FORMULA_ROWS,
+                                PASO1_MAPPINGS, PROPERTY_COL,
+                                build_dynamic_formula,
+                                get_column_for_comparable,
+                                get_comparable_count_from_template)
+from app.models import ComparableProperty, PriceType, PropertyToAnalyze
 from app.utils.logging import get_logger
-
 
 logger = get_logger()
 MISSING_FIELD_COLOR = (255, 242, 204)

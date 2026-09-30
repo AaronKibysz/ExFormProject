@@ -1,24 +1,23 @@
 """Main application window for ACM Generator."""
-import sys
-import os
-import logging
 import inspect
+import logging
+import os
+import sys
 from pathlib import Path
 from typing import List, Optional
 
-from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QSpinBox, QTextEdit,
-    QProgressBar, QFileDialog, QMessageBox, QGroupBox,
-    QFormLayout, QComboBox, QTableWidgetItem
-)
+from app.models import ComparableProperty, PriceType, PropertyToAnalyze
+from app.services import (ACMGenerationResult, ACMService,
+                          create_default_output_path)
+from app.utils.logging import get_logger, setup_logging
 from PySide6.QtCore import Qt, QThread, Signal, Slot
 from PySide6.QtGui import QFont
-
-from app.models import ComparableProperty, PropertyToAnalyze, PriceType
-from app.services import ACMService, ACMGenerationResult, create_default_output_path
-from app.utils.logging import setup_logging, get_logger
-
+from PySide6.QtWidgets import (QApplication, QComboBox, QFileDialog,
+                               QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+                               QLineEdit, QMainWindow, QMessageBox,
+                               QProgressBar, QPushButton, QSpinBox,
+                               QTableWidgetItem, QTextEdit, QVBoxLayout,
+                               QWidget)
 
 logger = get_logger()
 
@@ -88,7 +87,8 @@ class PreviewDialog(QWidget):
         layout.addWidget(info_label)
         
         # Table
-        from PySide6.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
+        from PySide6.QtWidgets import (QHeaderView, QTableWidget,
+                                       QTableWidgetItem)
         self.table = QTableWidget()
         self.table.setColumnCount(14)
         self.table.setHorizontalHeaderLabels([
@@ -539,7 +539,7 @@ class UILogHandler(logging.Handler):
     def emit(self, record):
         msg = self.format(record)
         # Use QMetaObject.invokeMethod for thread safety
-        from PySide6.QtCore import QMetaObject, Qt, Q_ARG
+        from PySide6.QtCore import Q_ARG, QMetaObject, Qt
         QMetaObject.invokeMethod(
             self.text_edit, "append",
             Qt.QueuedConnection,
